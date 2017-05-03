@@ -1,0 +1,16 @@
+com/example/appengine/MetadataPropertiesTest.class
+com/example/appengine/ProjectionServletTest.class
+com/example/appengine/MetadataEntityGroupTest.class
+com/example/appengine/ProjectionTest.class
+com/example/appengine/GuestbookTest$CustomHighRepJobPolicy.class
+com/example/appengine/EntitiesTest.class
+com/example/appengine/GuestbookStrongTest.class
+com/example/appengine/TransactionsTest.class
+com/example/appengine/MetadataEntityGroupTest$EntityGroupCount.class
+com/example/appengine/ListPeopleServletTest.class
+com/example/appengine/MetadataNamespacesTest.class
+com/example/appengine/ReadPolicyTest.class
+com/example/appengine/GuestbookTest.class
+com/example/appengine/IndexesTest.class
+com/example/appengine/QueriesTest.class
+com/example/appengine/MetadataKindsTest.class
