@@ -1,53 +1,24 @@
 package com.asu.smartshop;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import javax.mail.internet.NewsAddress;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
-
+import com.asu.jing.smartshop.Plan;
+import com.asu.jing.smartshop.ShopItem;
+import com.asu.jing.smartshop.SmartPlan;
+import com.asu.jing.smartshop.Store;
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query.*;
+import com.google.common.collect.ImmutableList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.asu.jing.smartshop.Path;
-import com.asu.jing.smartshop.Plan;
-import com.asu.jing.smartshop.ShopItem;
-import com.asu.jing.smartshop.SmartPlan;
-import com.asu.jing.smartshop.Store;
-import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.QueryResultList;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.search.query.QueryParser.query_return;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.common.collect.ImmutableList;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class StartupServlet extends HttpServlet {
 	private DatastoreService datastore = null;
@@ -285,8 +256,7 @@ public class StartupServlet extends HttpServlet {
 		SmartPlan sPlan = new SmartPlan(shopItems, curLat, curLng, tcf);
 		//for(int i = 0; i< 10 ; i++){
 		List<Plan> plans =	sPlan.getSortedPlans(1);
-			for(Plan p : plans)
-			{
+			for(Plan p : plans) {
 				System.out.println(p.getTotalPrice());
 				System.out.println(p.getTotalDistance());
 				p.organize();

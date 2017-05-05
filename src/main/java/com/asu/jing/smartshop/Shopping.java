@@ -1,12 +1,12 @@
 package com.asu.jing.smartshop;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 
 /**
  * @author Jing
@@ -23,24 +23,24 @@ public class Shopping {
 		this.currentLoc = currentLoc;
 		this.timeCostFactor = tcf;
 	}
-	
+
 	public Shopping(double currentLon, double currentLat, double tcf) {
 		this.priceTable = HashBasedTable.create();
 		this.currentLoc = new Location(currentLon, currentLat);
 		this.timeCostFactor = tcf;
 	}
-	
+
 	public void addProduct(String productName, String storeName, double longitude, double latitude, double price)
 	{
 		Store store = getStore(storeName,longitude,latitude);
 		this.priceTable.put(store, productName, price);
 	}
-	
+
 	public void addProduct(String productName, Store store, double price)
 	{
 		this.priceTable.put(store, productName, price);
 	}
-	
+
 	public Store getStore(String storeName, double longitude, double latitude)
 	{
 		Set<Store> stores = getStoreList();
@@ -51,26 +51,27 @@ public class Shopping {
 		Store store = new Store(storeName, longitude, latitude);
 		return store;
 	}
-	
+
 	public ArrayList<Plan> getSortedPlans(int levelOfCalculation)
 	{
-		if(levelOfCalculation > numOfStores() || levelOfCalculation <= 0){ 
-			System.out.println("numOfStores is "+numOfStores() + " levelOfCalculation is "+levelOfCalculation);
-			return null;
-		}
+		if(levelOfCalculation > numOfStores() || levelOfCalculation <=0) return null;
 		else
 		{
 			ArrayList<Plan> plans = getOneStorePlan();
+			if(plans == null) levelOfCalculation++;
 			for(int i=2; i<=levelOfCalculation; i++)
 			{
-				plans.addAll(getMultipleStorePlan(i));
+				if(i> numOfStores()) break;
+				ArrayList<Plan> plan = getMultipleStorePlan(i);
+				plans.addAll(plan);
+				if(plan == null) levelOfCalculation++;
 			}
 			Collections.sort(plans);
 			this.previousPlans = plans;
 			return plans;
 		}
 	}
-	
+
 	public ArrayList<Plan> changeTimeCostFactor(double tcf)
 	{
 		if(previousPlans == null) return null;
@@ -82,17 +83,17 @@ public class Shopping {
 		Collections.sort(previousPlans);
 		return previousPlans;
 	}
-	
+
 	public ArrayList<Plan> getMultipleStorePlan(int i)
 	{
 		ArrayList<Plan> plans = new ArrayList<Plan>();
-		
+
 		Set<Store> sList = getStoreList();
 		Set<String> pList = getProductList();
 		Store[] sArray = sList.toArray(new Store[sList.size()]);
-		
+
 		int numOfStores = numOfStores();
-		
+
 		ArrayList<Integer[]> list = getAllCombination(numOfStores, i);
 		for(Integer[] indexs : list)
 		{
@@ -106,12 +107,12 @@ public class Shopping {
 			if(p!=null)
 			{
 				p.organize();
-				plans.add(p);
+				if(p.getShortestPath().getStores().size()== i) plans.add(p);
 			}
 		}
 		return plans;
 	}
-	
+
 	public ArrayList<Integer[]> getAllCombination(int max, int num)
 	{
 		Integer[] first = new Integer[num];
@@ -124,7 +125,7 @@ public class Shopping {
 		addToList(list,max,num);
 		return list;
 	}
-	
+
 	private void addToList(ArrayList<Integer[]> list, int max, int num)
 	{
 		Integer[] last = list.get(list.size()-1);
@@ -144,7 +145,7 @@ public class Shopping {
 			}
 		}
 	}
-	
+
 	public ArrayList<Plan> getOneStorePlan()
 	{
 		ArrayList<Plan> plans = new ArrayList<Plan>();
@@ -166,22 +167,22 @@ public class Shopping {
 		}
 		return plans;
 	}
-	
+
 	public Set<String> getProductList()
 	{
 		return this.priceTable.columnKeySet();
 	}
-	
+
 	public int numOfProducts()
 	{
 		return getProductList().size();
 	}
-	
+
 	public Set<Store> getStoreList()
 	{
 		return this.priceTable.rowKeySet();
 	}
-	
+
 	public int numOfStores()
 	{
 		return getStoreList().size();

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="appengine-datastore:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="appengine-datastore-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="appengine-datastore:war exploded" />
+    </root>
+  </artifact>
+</component>
